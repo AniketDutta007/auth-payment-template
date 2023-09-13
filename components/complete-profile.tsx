@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -37,7 +37,7 @@ const profileSchema = z.object({
 
 export default function CompleteProfile() {
 	const { data: session } = useSession();
-	const { fetchUser } = useUserStore();
+	const { user, fetchUser } = useUserStore();
 
 	const form = useForm<z.infer<typeof profileSchema>>({
 		resolver: zodResolver(profileSchema),
@@ -50,13 +50,19 @@ export default function CompleteProfile() {
 	const [loading, setLoading] = useState<boolean>(false);
 
 	useEffect(() => {
-		if (session?.user && !session.user.isComplete) {
-			form.setValue('email', session.user.email);
+		if (user && !user.isComplete) {
+			user?.name && form.setValue('name', user.name);
 			setIsOpen(true);
 		} else {
 			setIsOpen(false);
 		}
-	}, [session?.user]);
+	}, [session, user, form]);
+
+	useEffect(() => {
+		if (session?.user) {
+			form.setValue('email', session.user.email);
+		}
+	}, [session?.user, form]);
 
 	async function onSubmit(values: z.infer<typeof profileSchema>) {
 		try {

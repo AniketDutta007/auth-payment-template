@@ -1,8 +1,9 @@
 import { withAuth, NextRequestWithAuth } from 'next-auth/middleware';
 export default withAuth(
 	function middleware(req: NextRequestWithAuth) {
-		console.log(req.url);
-		console.log(req.nextUrl.pathname.toString());
+		// console.log(req.url);
+		// console.log(req.nextUrl.pathname.toString());
+		// console.log(req.nextauth.token);
 	},
 	{
 		callbacks: {

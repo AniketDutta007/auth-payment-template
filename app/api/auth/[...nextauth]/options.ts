@@ -1,4 +1,5 @@
 import { AuthOptions } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
 import EmailProvider from 'next-auth/providers/email';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { PrismaClient } from '@prisma/client';
@@ -10,6 +11,10 @@ const prisma = new PrismaClient();
 export const options: AuthOptions = {
 	adapter: CustomPrismaAdapter(prisma),
 	providers: [
+		GoogleProvider({
+			clientId: process.env.GOOGLE_CLIENT_ID || '',
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+		}),
 		EmailProvider({
 			server: process.env.EMAIL_SERVER,
 			from: process.env.EMAIL_FROM,
@@ -23,8 +28,10 @@ export const options: AuthOptions = {
 		async jwt({ token, user }) {
 			if (user) {
 				token.id = user.id;
+				token.name = user.name;
 				token.email = user.email;
-				token.isComplete = user.isComplete;
+				token.isComplete = user.isComplete || false;
+				token.picture = user.image;
 			}
 			return token;
 		},
@@ -34,10 +41,18 @@ export const options: AuthOptions = {
 				user: {
 					...session.user,
 					id: token.id,
+					name: token.name,
 					email: token.email,
 					isComplete: token.isComplete,
+					image: token.picture,
 				},
 			};
+		},
+	},
+	events: {
+		async signIn({ user, isNewUser }) {
+			console.log(user);
+			console.log('isNewUser :', isNewUser);
 		},
 	},
 	pages: {

@@ -16,9 +16,19 @@ export async function GET(
 				emailVerified: true,
 				isComplete: true,
 				image: true,
+				accounts: {
+					select: {
+						provider: true,
+					},
+				},
 			},
 		});
-		return NextResponse.json({ user }, { status: 200 });
+		return NextResponse.json(
+			{
+				user,
+			},
+			{ status: 200 }
+		);
 	} catch (error) {
 		return NextResponse.json(
 			{ error: 'Something error on server' },

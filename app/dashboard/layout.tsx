@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { useUserStore } from '@/stores/useUserStore';
 import Profile from '@/components/profile-menu';
+import ProfileModal from '@/components/profile-modal';
 import { useToast } from '@/components/ui/use-toast';
 
 export default function RootLayout({
@@ -13,14 +14,13 @@ export default function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const { toast } = useToast();
 	const { data: session } = useSession({
 		required: true,
 		onUnauthenticated() {
 			redirect('/auth/signin');
 		},
 	});
-	const { error, fetchUser } = useUserStore();
+	const { fetchUser } = useUserStore();
 
 	useEffect(() => {
 		if (session?.user.id) {
@@ -35,10 +35,11 @@ export default function RootLayout({
 				<ModeToggle />
 				<Profile />
 			</nav>
-			<main className='w-[100%] grow bg-accent overflow-hidden overflow-y-auto'>
+			<main className='w-[100%] grow bg-background overflow-hidden overflow-y-auto'>
 				{children}
 			</main>
 			<CompleteProfile />
+			<ProfileModal />
 		</>
 	);
 }

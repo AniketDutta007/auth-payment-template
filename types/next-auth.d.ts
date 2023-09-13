@@ -5,24 +5,30 @@ declare module 'next-auth' {
 	interface Session extends DefaultSession {
 		user: DefaultUser & {
 			id: string;
+			name: string | null;
 			email: string;
 			emailVerified: Date;
 			isComplete: boolean;
+			image: string | null;
 		};
 	}
 	interface User extends DefaultUser {
 		id: string;
+		name: string | null;
 		email: string;
 		emailVerified: Date;
 		isComplete: boolean;
+		image: string | null;
 	}
 }
 
 declare module 'next-auth/jwt' {
 	interface JWT extends DefaultJWT {
 		id: string;
+		name: string | null;
 		email: string;
 		emailVerified: Date;
 		isComplete: boolean;
+		image: string | null;
 	}
 }

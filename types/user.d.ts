@@ -5,4 +5,5 @@ export type User = {
 	emailVerified?: Date;
 	isComplete: boolean;
 	image?: string;
+	linkedAccounts: string[];
 };

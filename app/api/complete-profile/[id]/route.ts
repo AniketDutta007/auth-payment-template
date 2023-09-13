@@ -29,6 +29,8 @@ export async function POST(
 					id,
 				},
 			});
+			console.log(userExists);
+
 			if (userExists) {
 				const user = await prisma.user.update({
 					where: {

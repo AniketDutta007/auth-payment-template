@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-
 import { User } from '@/types/user';
 
 interface State {
@@ -27,7 +26,15 @@ export const useUserStore = create<State & Actions>((set) => ({
 			set({ isLoading: true, error: null });
 			const response = await fetch(`/api/user/${id}`);
 			const data = await response.json();
-			set({ user: data.user, isLoading: false });
+			set({
+				user: {
+					...data.user,
+					linkedAccounts: data.user.accounts.map(
+						({ provider }: { provider: string }) => provider
+					),
+				},
+				isLoading: false,
+			});
 		} catch (error) {
 			set({ error, isLoading: false });
 		}
